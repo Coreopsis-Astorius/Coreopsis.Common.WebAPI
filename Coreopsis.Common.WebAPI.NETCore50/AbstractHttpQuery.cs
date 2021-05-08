@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace Coreopsis.WebApi
 {
+    /// <summary>
+    /// Класс выполнения запроса к API
+    /// </summary>
+    /// <typeparam name="T"></typeparam> 
     public abstract class AbstractHttpQuery<T> : IHttpQuery<T>
     {
         protected IApiData _apiData;
