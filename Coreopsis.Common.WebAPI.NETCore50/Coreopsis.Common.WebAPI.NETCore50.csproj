@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Configurations>Debug;Release;Coreopsis.Common.WebAPI.NETCore50</Configurations>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Coreopsis.Common.WebAPI</PackageId>
+    <Authors>Coreopsis.Astorius</Authors>
+    <Company>Coreopsis</Company>
+    <Description>WEB Api</Description>
+    <Version>0.1.4.2</Version>
+    <PackageIcon>CoreopsisIcon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\CoreopsisIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

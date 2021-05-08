@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreopsis.Common.WebAPI.NETCore50", "Coreopsis.Common.WebAPI.NETCore50\Coreopsis.Common.WebAPI.NETCore50.csproj", "{CEE284F3-A3ED-444C-8365-17674B076D21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreopsis.Common.WebAPI.NETFramework472", "Coreopsis.Common.WebAPI.NETFramework472\Coreopsis.Common.WebAPI.NETFramework472.csproj", "{5D27D32E-2B7F-4BB4-AF65-74A5FF088D46}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Coreopsis.Common.WebAPI.NETCore50|Any CPU = Coreopsis.Common.WebAPI.NETCore50|Any CPU
+		Coreopsis.Common.WebAPI.NETFramework472|Any CPU = Coreopsis.Common.WebAPI.NETFramework472|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEE284F3-A3ED-444C-8365-17674B076D21}.Coreopsis.Common.WebAPI.NETCore50|Any CPU.ActiveCfg = Coreopsis.Common.WebAPI.NETCore50|Any CPU
+		{CEE284F3-A3ED-444C-8365-17674B076D21}.Coreopsis.Common.WebAPI.NETCore50|Any CPU.Build.0 = Coreopsis.Common.WebAPI.NETCore50|Any CPU
+		{CEE284F3-A3ED-444C-8365-17674B076D21}.Coreopsis.Common.WebAPI.NETFramework472|Any CPU.ActiveCfg = Coreopsis.Common.WebAPI.NETCore50|Any CPU
+		{CEE284F3-A3ED-444C-8365-17674B076D21}.Coreopsis.Common.WebAPI.NETFramework472|Any CPU.Build.0 = Coreopsis.Common.WebAPI.NETCore50|Any CPU
+		{CEE284F3-A3ED-444C-8365-17674B076D21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE284F3-A3ED-444C-8365-17674B076D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE284F3-A3ED-444C-8365-17674B076D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE284F3-A3ED-444C-8365-17674B076D21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D27D32E-2B7F-4BB4-AF65-74A5FF088D46}.Coreopsis.Common.WebAPI.NETCore50|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D27D32E-2B7F-4BB4-AF65-74A5FF088D46}.Coreopsis.Common.WebAPI.NETCore50|Any CPU.Build.0 = Debug|Any CPU
+		{5D27D32E-2B7F-4BB4-AF65-74A5FF088D46}.Coreopsis.Common.WebAPI.NETFramework472|Any CPU.ActiveCfg = Coreopsis.Common.WebAPI.NETFramework472|Any CPU
+		{5D27D32E-2B7F-4BB4-AF65-74A5FF088D46}.Coreopsis.Common.WebAPI.NETFramework472|Any CPU.Build.0 = Coreopsis.Common.WebAPI.NETFramework472|Any CPU
+		{5D27D32E-2B7F-4BB4-AF65-74A5FF088D46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D27D32E-2B7F-4BB4-AF65-74A5FF088D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D27D32E-2B7F-4BB4-AF65-74A5FF088D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D27D32E-2B7F-4BB4-AF65-74A5FF088D46}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C007EA65-C91A-4757-9943-C16D18F4BCA1}
+	EndGlobalSection
+EndGlobal
