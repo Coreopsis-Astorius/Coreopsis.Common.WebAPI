@@ -52,7 +52,7 @@ namespace Coreopsis.WebApi
                         {
                             string responseFromServer = reader.ReadToEnd();
 
-                            answer = Regex.Unescape(responseFromServer);
+                            answer = Regex.Unescape(responseFromServer.Replace("'", "").Replace("\"~\\", "").Replace("~\"", ""));
 
                             return answer;
                         }
@@ -98,7 +98,7 @@ namespace Coreopsis.WebApi
                         {
                             string responseFromServer = await reader.ReadToEndAsync();
 
-                            answer = Regex.Unescape(responseFromServer);
+                            answer = Regex.Unescape(responseFromServer.Replace("'", "").Replace("\"~\\", "").Replace("~\"", ""));
 
                             return answer;
                         }

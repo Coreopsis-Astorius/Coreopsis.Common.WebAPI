@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Coreopsis.WebApi
@@ -18,7 +18,7 @@ namespace Coreopsis.WebApi
 
             string response = GetResponse(request);
 
-            return JsonConvert.DeserializeObject<T>(response);
+            return JsonSerializer.Deserialize<T>(response);
         }
 
         public override async Task<T> SendRequestAsync()
@@ -27,7 +27,7 @@ namespace Coreopsis.WebApi
 
             string response = await GetResponseAsync(request);
 
-            return JsonConvert.DeserializeObject<T>(response);
+            return JsonSerializer.Deserialize<T>(response);
         }
 
         private HttpWebRequest CreateRequest()
