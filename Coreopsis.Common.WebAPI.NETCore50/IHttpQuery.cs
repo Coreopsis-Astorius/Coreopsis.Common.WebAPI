@@ -6,5 +6,7 @@ namespace Coreopsis.WebApi
     {
         T SendRequest();
         Task<T> SendRequestAsync();
+        string SendRequestString();
+        Task<string> SendRequestStringAsync();
     }
 }

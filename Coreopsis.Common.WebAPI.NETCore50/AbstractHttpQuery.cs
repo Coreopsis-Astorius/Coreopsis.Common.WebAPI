@@ -34,6 +34,10 @@ namespace Coreopsis.WebApi
 
         public abstract Task<T> SendRequestAsync();
 
+        public abstract string SendRequestString();
+
+        public abstract Task<string> SendRequestStringAsync();
+
         protected virtual string GetResponse(HttpWebRequest request)
         {
             string answer = null;
@@ -52,7 +56,7 @@ namespace Coreopsis.WebApi
                         {
                             string responseFromServer = reader.ReadToEnd();
 
-                            answer = Regex.Unescape(responseFromServer.Replace("'", "").Replace("\"~\\", "").Replace("~\"", ""));
+                            answer = Regex.Unescape(responseFromServer);
 
                             return answer;
                         }
@@ -98,7 +102,7 @@ namespace Coreopsis.WebApi
                         {
                             string responseFromServer = await reader.ReadToEndAsync();
 
-                            answer = Regex.Unescape(responseFromServer.Replace("'", "").Replace("\"~\\", "").Replace("~\"", ""));
+                            answer = Regex.Unescape(responseFromServer);
 
                             return answer;
                         }

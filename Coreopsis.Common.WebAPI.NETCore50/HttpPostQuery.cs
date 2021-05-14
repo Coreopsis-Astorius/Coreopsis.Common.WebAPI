@@ -16,20 +16,34 @@ namespace Coreopsis.WebApi
 
         public override T SendRequest()
         {
-            HttpWebRequest request = CreateRequest();
-
-            string response = GetResponse(request);
+            string response = SendRequestString();
 
             return JsonSerializer.Deserialize<T>(response);
         }
 
         public override async Task<T> SendRequestAsync()
         {
+            string response = await SendRequestStringAsync();
+
+            return JsonSerializer.Deserialize<T>(response);
+        }
+
+        public override string SendRequestString()
+        {
+            HttpWebRequest request = CreateRequest();
+
+            string response = GetResponse(request);
+
+            return response;
+        }
+
+        public override async Task<string> SendRequestStringAsync()
+        {
             HttpWebRequest request = CreateRequest();
 
             string response = await GetResponseAsync(request);
 
-            return JsonSerializer.Deserialize<T>(response);
+            return response;
         }
 
         private HttpWebRequest CreateRequest()
