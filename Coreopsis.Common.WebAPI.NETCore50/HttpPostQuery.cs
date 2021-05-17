@@ -77,22 +77,37 @@ namespace Coreopsis.WebApi
                 switch (header)
                 {
                     case "Connection":
-                        request.Connection = headers[header];
+                        {
+                            request.Connection = headers[header];
+                            
+                        }
                         break;
                     case "ContentType":
-                        request.ContentType = headers[header];
+                        {
+                            request.ContentType = headers[header];
+                            
+                        }
                         break;
                     case "Host":
-                        request.Host = headers[header];
+                        {
+                            request.Host = headers[header];
+                           
+                        }
                         break;
                     case "UserAgent":
-                        request.UserAgent = headers[header];
+                        {
+                            request.UserAgent = headers[header];
+                            
+                        }
+                        break;
+                    default:
+                        {
+                            request.Headers.Add(headers[header]);
+                        }
                         break;
                 }
             }
-
-            request.Headers.Add(headers);
-
+           
             return request;
         }
     }
