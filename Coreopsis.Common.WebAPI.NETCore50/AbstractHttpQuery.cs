@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -58,6 +59,10 @@ namespace Coreopsis.WebApi
 
                             answer = Regex.Unescape(responseFromServer);
 
+                            Regex rx = new Regex(@"\\[uU]([0-9A-F]{4})");
+
+                            answer = rx.Replace(answer, match => ((char)Int32.Parse(match.Value.Substring(2), NumberStyles.HexNumber)).ToString());
+
                             return answer;
                         }
                     }
@@ -103,6 +108,10 @@ namespace Coreopsis.WebApi
                             string responseFromServer = await reader.ReadToEndAsync();
 
                             answer = Regex.Unescape(responseFromServer);
+
+                            Regex rx = new Regex(@"\\[uU]([0-9A-F]{4})");
+
+                            answer = rx.Replace(answer, match => ((char)Int32.Parse(match.Value.Substring(2), NumberStyles.HexNumber)).ToString());
 
                             return answer;
                         }
