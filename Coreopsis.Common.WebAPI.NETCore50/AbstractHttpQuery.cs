@@ -57,11 +57,7 @@ namespace Coreopsis.WebApi
                         {
                             string responseFromServer = reader.ReadToEnd();
 
-                            answer = Regex.Unescape(responseFromServer);
-
-                            Regex rx = new Regex(@"\\[uU]([0-9A-F]{4})");
-
-                            answer = rx.Replace(answer, match => ((char)Int32.Parse(match.Value.Substring(2), NumberStyles.HexNumber)).ToString());
+                            answer = DecodeCharacters(responseFromServer);
 
                             return answer;
                         }
@@ -107,11 +103,7 @@ namespace Coreopsis.WebApi
                         {
                             string responseFromServer = await reader.ReadToEndAsync();
 
-                            answer = Regex.Unescape(responseFromServer);
-
-                            Regex rx = new Regex(@"\\[uU]([0-9A-F]{4})");
-
-                            answer = rx.Replace(answer, match => ((char)Int32.Parse(match.Value.Substring(2), NumberStyles.HexNumber)).ToString());
+                            answer = DecodeCharacters(responseFromServer);
 
                             return answer;
                         }
@@ -137,6 +129,16 @@ namespace Coreopsis.WebApi
 
                 throw new WebException(answer, webEx);
             }
+        }
+        private string DecodeCharacters(string text)
+        {
+            return Regex.Replace(
+              text,
+              @"\\u([\da-fA-F]{4})",
+              m => {
+                  return ((char)Int32.Parse(m.Groups[1].Value, NumberStyles.HexNumber)).ToString();
+              }
+            );
         }
     }
 }
