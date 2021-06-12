@@ -134,7 +134,7 @@ namespace Coreopsis.WebApi
         {
             return Regex.Replace(
               text,
-              @"\\u([\da-fA-F]{4})",
+               @"\\\\u([\da-fA-F]{4})",
               m => {
                   return ((char)Int32.Parse(m.Groups[1].Value, NumberStyles.HexNumber)).ToString();
               }
