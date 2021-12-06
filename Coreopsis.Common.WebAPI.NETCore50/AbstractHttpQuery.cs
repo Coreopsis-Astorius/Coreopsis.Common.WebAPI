@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Coreopsis.Common.WebAPI.Exceptions;
+using Coreopsis.Interfaces.WebApi;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -13,7 +15,7 @@ namespace Coreopsis.WebApi
     /// Класс выполнения запроса к API
     /// </summary>
     /// <typeparam name="T"></typeparam> 
-    public abstract class AbstractHttpQuery<T> : IHttpQuery<T>
+    public abstract class AbstractHttpQuery<T> : IHttpQuery<T> where T : class
     {
         protected IApiData _apiData;
 
@@ -31,13 +33,9 @@ namespace Coreopsis.WebApi
             _apiQueryTimeout = apiQueryTimeout;
         }
 
-        public abstract T SendRequest();
+        public abstract T SendRequest(bool serilize);
 
-        public abstract Task<T> SendRequestAsync();
-
-        public abstract string SendRequestString();
-
-        public abstract Task<string> SendRequestStringAsync();
+        public abstract Task<T> SendRequestAsync(bool serilize);
 
         protected virtual string GetResponse(HttpWebRequest request)
         {
@@ -68,7 +66,7 @@ namespace Coreopsis.WebApi
             {
                 if (webEx.Response == null)
                 {
-                    throw new WebException(webEx.Message, webEx);
+                    throw new NotImplementedWebAPIException(webEx.Message, webEx.Message, webEx);
                 }
                 
                 using (var stream = webEx.Response.GetResponseStream())
@@ -81,7 +79,9 @@ namespace Coreopsis.WebApi
                     answer = Regex.Replace(answer, "<[^>]+>", string.Empty).Replace("\\", "").Trim();
                 }
 
-                throw new WebException(answer, webEx);
+                CreateException(answer, webEx, webEx.Response);
+
+                return null;
             }
         }
 
@@ -114,7 +114,7 @@ namespace Coreopsis.WebApi
             {
                 if (webEx.Response == null)
                 {
-                    throw new WebException(webEx.Message, webEx);
+                    throw new NotImplementedWebAPIException(webEx.Message, webEx.Message, webEx);
                 }
 
                 using (var stream = webEx.Response.GetResponseStream())
@@ -127,7 +127,9 @@ namespace Coreopsis.WebApi
                     answer = Regex.Replace(answer, "<[^>]+>", string.Empty).Replace("\\", "").Trim();
                 }
 
-                throw new WebException(answer, webEx);
+                CreateException(answer, webEx, webEx.Response);
+
+                return null;
             }
         }
         private string DecodeCharacters(string text)
@@ -139,6 +141,32 @@ namespace Coreopsis.WebApi
                   return ((char)Int32.Parse(m.Groups[1].Value, NumberStyles.HexNumber)).ToString();
               }
             );
+        }
+
+        private void CreateException(string message, WebException exception, WebResponse response)
+        {
+            HttpWebResponse webResponse = response as System.Net.HttpWebResponse;
+
+            if( webResponse == null)
+            {
+                throw new NotImplementedWebAPIException(message, exception.Message, exception);
+            }
+
+            switch (webResponse.StatusCode)
+            {
+                case HttpStatusCode.Forbidden:
+                    {
+                        throw new Error403Exception(message, exception.Message, exception);
+                    }
+                case HttpStatusCode.NotFound:
+                    {
+                        throw new Error404Exception(message, exception.Message, exception);
+                    }
+                default:
+                    {
+                        throw new NotImplementedWebAPIException(message, exception.Message, exception);
+                    }
+            }
         }
     }
 }

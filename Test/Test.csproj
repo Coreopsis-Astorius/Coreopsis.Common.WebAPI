@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Coreopsis.Common.WebAPI.NETCore50\Coreopsis.Common.WebAPI.NETCore50.csproj" />
+  </ItemGroup>
+
+</Project>

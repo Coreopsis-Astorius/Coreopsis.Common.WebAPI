@@ -1,4 +1,4 @@
-﻿namespace Coreopsis.WebApi
+﻿namespace Coreopsis.Interfaces.WebApi
 {
     public interface IApiData
     {

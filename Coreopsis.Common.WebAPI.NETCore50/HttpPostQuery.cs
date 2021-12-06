@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Coreopsis.Common.WebAPI.Exceptions;
+using Coreopsis.Interfaces.WebApi;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -7,43 +9,49 @@ using System.Threading.Tasks;
 
 namespace Coreopsis.WebApi
 {
-    public sealed class HttpPostQuery<T> : AbstractHttpQuery<T>
+    public sealed class HttpPostQuery<T> : AbstractHttpQuery<T> where T : class
     {       
         public HttpPostQuery(IApiData apiData, WebHeaderCollection headers, TimeSpan connectionTimeout, TimeSpan apiQueryTimeout) 
             : base(apiData, headers, connectionTimeout, apiQueryTimeout)
         {
         }
 
-        public override T SendRequest()
-        {
-            string response = SendRequestString();
-
-            return JsonSerializer.Deserialize<T>(response);
-        }
-
-        public override async Task<T> SendRequestAsync()
-        {
-            string response = await SendRequestStringAsync();
-
-            return JsonSerializer.Deserialize<T>(response);
-        }
-
-        public override string SendRequestString()
+        public override T SendRequest(bool serilize)
         {
             HttpWebRequest request = CreateRequest();
 
             string response = GetResponse(request);
 
-            return response;
+            if (serilize)
+            {
+                return JsonSerializer.Deserialize<T>(response);
+            }
+
+            if (response as T != null)
+            {
+                return response as T;
+            }
+
+            throw new SerializationException("Destination serialization object is not a `String`");
         }
 
-        public override async Task<string> SendRequestStringAsync()
+        public override async Task<T> SendRequestAsync(bool serilize)
         {
             HttpWebRequest request = CreateRequest();
 
             string response = await GetResponseAsync(request);
 
-            return response;
+            if (serilize)
+            {
+                return JsonSerializer.Deserialize<T>(response);
+            }
+
+            if (response as T != null)
+            {
+                return response as T;
+            }
+
+            throw new SerializationException("Destination serialization object is not a `String`");
         }
 
         private HttpWebRequest CreateRequest()

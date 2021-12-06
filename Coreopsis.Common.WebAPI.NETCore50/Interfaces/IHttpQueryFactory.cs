@@ -1,8 +1,8 @@
 ﻿using System.Net;
 
-namespace Coreopsis.WebApi
+namespace Coreopsis.Interfaces.WebApi
 {
-    public interface IHttpQueryFactory<T>
+    public interface IHttpQueryFactory<T> where T : class
     {
         IHttpQuery<T> Create();
 

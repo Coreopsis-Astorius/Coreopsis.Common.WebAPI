@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Coreopsis.Interfaces.WebApi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
 namespace Coreopsis.WebApi
 {
-    public sealed class GetQueryFactory<T> : IHttpQueryFactory<T>
+    public sealed class GetQueryFactory<T> : IHttpQueryFactory<T> where T : class
     {
         private IApiData _apiData;
         private TimeSpan _connectionTimeout;
