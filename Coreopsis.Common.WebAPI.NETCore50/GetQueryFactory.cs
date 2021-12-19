@@ -15,12 +15,14 @@ namespace Coreopsis.WebApi
         private Dictionary<HttpRequestHeader, string> _headerData;
         private Dictionary<string, string> _customHeaderData;
 
+        private IWebProxy _proxy;
         public GetQueryFactory(
                 IApiData apiData,
                 string contentType,
                 string userAgent,
                 TimeSpan connectionTimeout,
-                TimeSpan apiQueryTimeout)
+                TimeSpan apiQueryTimeout,
+                IWebProxy proxy = null)
         {
             _apiData = apiData;
 
@@ -32,6 +34,7 @@ namespace Coreopsis.WebApi
 
             _connectionTimeout = connectionTimeout;
             _apiQueryTimeout = apiQueryTimeout;
+            _proxy = proxy;
         }
 
         public IHttpQuery<T> Create()
@@ -48,7 +51,7 @@ namespace Coreopsis.WebApi
                 whc.Add(header.Key, header.Value);
             }
 
-            return new HttpGetQuery<T>(_apiData, whc, _connectionTimeout, _apiQueryTimeout);
+            return new HttpGetQuery<T>(_apiData, whc, _connectionTimeout, _apiQueryTimeout, _proxy);
         }
 
         public void SetHeader(HttpRequestHeader header, string value)

@@ -17,13 +17,15 @@ namespace Coreopsis.WebApi
 
         private TimeSpan _apiQueryTimeout;
 
+        private IWebProxy _proxy;
         public PostQueryFactory(
                 IApiData apiData,
                 string accept,
                 string contentType,
                 string userAgent,
                 TimeSpan connectionTimeout,
-                TimeSpan apiQueryTimeout)
+                TimeSpan apiQueryTimeout,
+                IWebProxy proxy = null)
         {
             _apiData = apiData;
 
@@ -35,6 +37,7 @@ namespace Coreopsis.WebApi
 
             _connectionTimeout = connectionTimeout;
             _apiQueryTimeout = apiQueryTimeout;
+            _proxy = proxy;
         }
 
         public IHttpQuery<T> Create()
@@ -51,7 +54,7 @@ namespace Coreopsis.WebApi
                 whc.Add(header.Key, header.Value);
             }
 
-            return new HttpPostQuery<T>(_apiData, whc, _connectionTimeout, _apiQueryTimeout);
+            return new HttpPostQuery<T>(_apiData, whc, _connectionTimeout, _apiQueryTimeout, _proxy);
         }
 
         public void SetHeader(HttpRequestHeader header, string value)

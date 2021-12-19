@@ -25,12 +25,15 @@ namespace Coreopsis.WebApi
 
         private TimeSpan _apiQueryTimeout;
 
-        public AbstractHttpQuery(IApiData apiData, WebHeaderCollection headers, TimeSpan connectionTimeout, TimeSpan apiQueryTimeout)
+        private IWebProxy _proxy;
+
+        public AbstractHttpQuery(IApiData apiData, WebHeaderCollection headers, TimeSpan connectionTimeout, TimeSpan apiQueryTimeout, IWebProxy proxy = null)
         {
             _apiData = apiData;
             _headers = headers;
             _connectionTimeout = connectionTimeout;
             _apiQueryTimeout = apiQueryTimeout;
+            _proxy = proxy;
         }
 
         public abstract T SendRequest(bool serilize);
@@ -46,6 +49,11 @@ namespace Coreopsis.WebApi
                 Thread.Sleep((int)_apiQueryTimeout.TotalMilliseconds);
 
                 request.Timeout = (int)_connectionTimeout.TotalMilliseconds;
+
+                if (_proxy != null)
+                {
+                    request.Proxy = _proxy;
+                }
 
                 using (WebResponse response = request.GetResponse())
                 {
@@ -94,6 +102,11 @@ namespace Coreopsis.WebApi
                 Thread.Sleep((int)_apiQueryTimeout.TotalMilliseconds);
 
                 request.Timeout = (int)_connectionTimeout.TotalMilliseconds;
+
+                if (_proxy != null)
+                {
+                    request.Proxy = _proxy;
+                }
 
                 using (WebResponse response = await request.GetResponseAsync())
                 {

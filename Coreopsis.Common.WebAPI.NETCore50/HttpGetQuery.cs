@@ -9,8 +9,8 @@ namespace Coreopsis.WebApi
 {
     public class HttpGetQuery<T> : AbstractHttpQuery<T> where T : class
     {
-        public HttpGetQuery(IApiData apiData, WebHeaderCollection headers, TimeSpan connectionTimeout, TimeSpan apiQueryTimeout) 
-            : base(apiData, headers, connectionTimeout, apiQueryTimeout)
+        public HttpGetQuery(IApiData apiData, WebHeaderCollection headers, TimeSpan connectionTimeout, TimeSpan apiQueryTimeout, IWebProxy proxy = null) 
+            : base(apiData, headers, connectionTimeout, apiQueryTimeout, proxy)
         {
         }
 
