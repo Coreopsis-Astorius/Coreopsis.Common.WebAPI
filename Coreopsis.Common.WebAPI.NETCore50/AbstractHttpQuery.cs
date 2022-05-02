@@ -167,6 +167,14 @@ namespace Coreopsis.WebApi
 
             switch (webResponse.StatusCode)
             {
+                case HttpStatusCode.Unauthorized:
+                    {
+                        throw new UnauthorizedException(message, exception.Message, exception);
+                    }
+                case HttpStatusCode.RequestTimeout:
+                    {
+                        throw new ReuqestTimeoutException(message, exception.Message, exception);
+                    }
                 case HttpStatusCode.Forbidden:
                     {
                         throw new Error403Exception(message, exception.Message, exception);
