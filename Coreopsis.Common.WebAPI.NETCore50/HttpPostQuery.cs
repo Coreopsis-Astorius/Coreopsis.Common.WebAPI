@@ -4,8 +4,8 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Coreopsis.WebApi
 {
@@ -24,7 +24,7 @@ namespace Coreopsis.WebApi
 
             if (serilize)
             {
-                return JsonSerializer.Deserialize<T>(response);
+                return JsonConvert.DeserializeObject<T>(response);
             }
 
             if (response as T != null)
@@ -43,7 +43,7 @@ namespace Coreopsis.WebApi
 
             if (serilize)
             {
-                return JsonSerializer.Deserialize<T>(response);
+                return JsonConvert.DeserializeObject<T>(response);
             }
 
             if (response as T != null)
