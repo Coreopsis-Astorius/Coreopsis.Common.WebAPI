@@ -1,8 +1,8 @@
 ﻿using Coreopsis.Interfaces.WebApi;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Coreopsis.WebApi
@@ -22,7 +22,7 @@ namespace Coreopsis.WebApi
 
             if (serilize)
             {
-                return JsonSerializer.Deserialize<T>(response);
+                return JsonConvert.DeserializeObject<T>(response);
             }
 
             if (response as T != null)
@@ -41,7 +41,7 @@ namespace Coreopsis.WebApi
 
             if (serilize)
             {
-                return JsonSerializer.Deserialize<T>(response);
+                return JsonConvert.DeserializeObject<T>(response);
             }
 
             if (response as T != null)
