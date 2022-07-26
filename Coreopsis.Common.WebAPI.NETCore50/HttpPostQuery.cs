@@ -38,7 +38,6 @@ namespace Coreopsis.WebApi
         public override async Task<T> SendRequestAsync(bool serilize)
         {
             HttpWebRequest request = CreateRequest();
-
             string response = await GetResponseAsync(request);
 
             if (serilize)
@@ -80,42 +79,8 @@ namespace Coreopsis.WebApi
             request.Method = WebRequestMethods.Http.Post;
             request.ProtocolVersion = HttpVersion.Version11;
 
-            foreach (string header in headers)
-            {
-                switch (header)
-                {
-                    case "Connection":
-                        {
-                            request.Connection = headers[header];
-                            
-                        }
-                        break;
-                    case "ContentType":
-                        {
-                            request.ContentType = headers[header];
-                            
-                        }
-                        break;
-                    case "Host":
-                        {
-                            request.Host = headers[header];
-                           
-                        }
-                        break;
-                    case "UserAgent":
-                        {
-                            request.UserAgent = headers[header];
-                            
-                        }
-                        break;
-                    default:
-                        {
-                            request.Headers.Add(headers[header]);
-                        }
-                        break;
-                }
-            }
-           
+            SetHeaders(request, headers);
+
             return request;
         }
     }

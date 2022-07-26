@@ -69,7 +69,7 @@ namespace Coreopsis.WebApi
 
             request.ProtocolVersion = HttpVersion.Version11;
 
-            request.Headers = headers;
+            SetHeaders(request, headers);
 
             return request;
         }

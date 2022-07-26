@@ -40,6 +40,45 @@ namespace Coreopsis.WebApi
 
         public abstract Task<T> SendRequestAsync(bool serilize);
 
+        protected virtual void SetHeaders(HttpWebRequest request, WebHeaderCollection headers)
+        {
+            foreach (string header in headers)
+            {
+                switch (header)
+                {
+                    case "Connection":
+                        {
+                            request.Connection = headers[header];
+
+                        }
+                        break;
+                    case "ContentType":
+                        {
+                            request.ContentType = headers[header];
+
+                        }
+                        break;
+                    case "Host":
+                        {
+                            request.Host = headers[header];
+
+                        }
+                        break;
+                    case "UserAgent":
+                        {
+                            request.UserAgent = headers[header];
+
+                        }
+                        break;
+                    default:
+                        {
+                            request.Headers.Add(header, headers[header]);
+                        }
+                        break;
+                }
+            }
+        }
+
         protected virtual string GetResponse(HttpWebRequest request)
         {
             string answer = null;
@@ -174,6 +213,10 @@ namespace Coreopsis.WebApi
                 case HttpStatusCode.RequestTimeout:
                     {
                         throw new ReuqestTimeoutException(message, exception.Message, exception);
+                    }
+                case HttpStatusCode.BadRequest:
+                    {
+                        throw new Error400Exception(message, exception.Message, exception);
                     }
                 case HttpStatusCode.Forbidden:
                     {
