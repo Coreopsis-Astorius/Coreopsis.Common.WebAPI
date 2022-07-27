@@ -21,7 +21,7 @@ namespace Test
                 "application/x-www-form-urlencoded",
                 "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
                 new TimeSpan(0, 1, 0),
-                new TimeSpan(0, 0, 1), myProxy);
+                TimeSpan.FromMilliseconds(1200), myProxy, 5);
 
             IHttpQuery<string> coreopsisSetTokenResponse = httpQueryFactory.Create();
             try
@@ -32,7 +32,11 @@ namespace Test
             {
                 Console.WriteLine(ex.ServerError);
             }
-            catch(Exception ex)
+            catch (NotImplementedWebAPIException ex)
+            {
+                Console.WriteLine(ex.ServerError);
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }

@@ -11,8 +11,8 @@ namespace Coreopsis.WebApi
 {
     public sealed class HttpPostQuery<T> : AbstractHttpQuery<T> where T : class
     {       
-        public HttpPostQuery(IApiData apiData, WebHeaderCollection headers, TimeSpan connectionTimeout, TimeSpan apiQueryTimeout, IWebProxy proxy = null) 
-            : base(apiData, headers, connectionTimeout, apiQueryTimeout, proxy)
+        public HttpPostQuery(IApiData apiData, WebHeaderCollection headers, TimeSpan connectionTimeout, TimeSpan apiQueryTimeout, IWebProxy proxy = null, int repeatRequestCountWithError = 0) 
+            : base(apiData, headers, connectionTimeout, apiQueryTimeout, proxy, repeatRequestCountWithError)
         {
         }
 

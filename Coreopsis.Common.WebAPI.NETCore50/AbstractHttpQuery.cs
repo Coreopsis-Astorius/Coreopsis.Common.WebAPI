@@ -27,13 +27,25 @@ namespace Coreopsis.WebApi
 
         private IWebProxy _proxy;
 
-        public AbstractHttpQuery(IApiData apiData, WebHeaderCollection headers, TimeSpan connectionTimeout, TimeSpan apiQueryTimeout, IWebProxy proxy = null)
+        protected int _repeatRequestCountWithError;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="apiData"></param>
+        /// <param name="headers"></param>
+        /// <param name="connectionTimeout"></param>
+        /// <param name="apiQueryTimeout"></param>
+        /// <param name="proxy"></param>
+        /// <param name="repeatRequestCountWithError">Количество повторных запросов при ошибке</param>
+        public AbstractHttpQuery(IApiData apiData, WebHeaderCollection headers, TimeSpan connectionTimeout, TimeSpan apiQueryTimeout, IWebProxy proxy = null, int repeatRequestCountWithError = 0)
         {
             _apiData = apiData;
             _headers = headers;
             _connectionTimeout = connectionTimeout;
             _apiQueryTimeout = apiQueryTimeout;
             _proxy = proxy;
+            _repeatRequestCountWithError = repeatRequestCountWithError;
         }
 
         public abstract T SendRequest(bool serilize);
@@ -82,107 +94,135 @@ namespace Coreopsis.WebApi
         protected virtual string GetResponse(HttpWebRequest request)
         {
             string answer = null;
+            int repeatCount = 0;
 
-            try
+            WebException lastWebException = null;
+            do
             {
-                Thread.Sleep((int)_apiQueryTimeout.TotalMilliseconds);
-
-                request.Timeout = (int)_connectionTimeout.TotalMilliseconds;
-
-                if (_proxy != null)
+                repeatCount++;
+                try
                 {
-                    request.Proxy = _proxy;
-                }
+                    Thread.Sleep((int)_apiQueryTimeout.TotalMilliseconds);
 
-                using (WebResponse response = request.GetResponse())
-                {
-                    using (Stream dataStream = response.GetResponseStream())
+                    request.Timeout = (int)_connectionTimeout.TotalMilliseconds;
+
+                    if (_proxy != null)
                     {
-                        using (StreamReader reader = new StreamReader(dataStream, Encoding.GetEncoding("UTF-8")))
+                        request.Proxy = _proxy;
+                    }
+
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream dataStream = response.GetResponseStream())
                         {
-                            string responseFromServer = reader.ReadToEnd();
+                            using (StreamReader reader = new StreamReader(dataStream, Encoding.GetEncoding("UTF-8")))
+                            {
+                                string responseFromServer = reader.ReadToEnd();
 
-                            answer = DecodeCharacters(responseFromServer);
+                                answer = DecodeCharacters(responseFromServer);
 
-                            return answer;
+                                return answer;
+                            }
                         }
                     }
                 }
+                catch (WebException webEx)
+                {
+                    if (webEx.Response == null)
+                    {
+                        lastWebException = new NotImplementedWebAPIException(webEx.Message, webEx.Message, webEx);
+                        continue;
+                    }
+
+                    using (var stream = webEx.Response.GetResponseStream())
+                    using (var reader = new StreamReader(stream))
+                    {
+                        answer = Regex.Unescape(reader.ReadToEnd());
+
+                        answer = answer.Replace("{", "").Replace("}", "");
+
+                        answer = Regex.Replace(answer, "<[^>]+>", string.Empty).Replace("\\", "").Trim();
+                    }
+
+                    lastWebException = webEx;
+                }
             }
-            catch (WebException webEx)
+            while (repeatCount < _repeatRequestCountWithError);
+
+            if (lastWebException != null)
             {
-                if (webEx.Response == null)
-                {
-                    throw new NotImplementedWebAPIException(webEx.Message, webEx.Message, webEx);
-                }
-                
-                using (var stream = webEx.Response.GetResponseStream())
-                using (var reader = new StreamReader(stream))
-                {
-                    answer = Regex.Unescape(reader.ReadToEnd());
-
-                    answer = answer.Replace("{", "").Replace("}", "");
-
-                    answer = Regex.Replace(answer, "<[^>]+>", string.Empty).Replace("\\", "").Trim();
-                }
-
-                CreateException(answer, webEx, webEx.Response);
-
-                return null;
+                CreateException(answer, lastWebException, lastWebException.Response);
             }
+
+            return null;
         }
 
         protected virtual async Task<string> GetResponseAsync(HttpWebRequest request)
         {
             string answer = null;
 
-            try
+            int repeatCount = 0;
+
+            WebException lastWebException = null;
+
+            do
             {
-                Thread.Sleep((int)_apiQueryTimeout.TotalMilliseconds);
-
-                request.Timeout = (int)_connectionTimeout.TotalMilliseconds;
-
-                if (_proxy != null)
+                repeatCount++;
+                try
                 {
-                    request.Proxy = _proxy;
-                }
+                    Thread.Sleep((int)_apiQueryTimeout.TotalMilliseconds);
 
-                using (WebResponse response = await request.GetResponseAsync())
-                {
-                    using (Stream dataStream = response.GetResponseStream())
+                    request.Timeout = (int)_connectionTimeout.TotalMilliseconds;
+
+                    if (_proxy != null)
                     {
-                        using (StreamReader reader = new StreamReader(dataStream, Encoding.GetEncoding("UTF-8")))
+                        request.Proxy = _proxy;
+                    }
+
+                    using (WebResponse response = await request.GetResponseAsync())
+                    {
+                        using (Stream dataStream = response.GetResponseStream())
                         {
-                            string responseFromServer = await reader.ReadToEndAsync();
+                            using (StreamReader reader = new StreamReader(dataStream, Encoding.GetEncoding("UTF-8")))
+                            {
+                                string responseFromServer = await reader.ReadToEndAsync();
 
-                            answer = DecodeCharacters(responseFromServer);
+                                answer = DecodeCharacters(responseFromServer);
 
-                            return answer;
+                                return answer;
+                            }
                         }
                     }
                 }
+                catch (WebException webEx)
+                {
+                    if (webEx.Response == null)
+                    {
+                        lastWebException = new NotImplementedWebAPIException(webEx.Message, webEx.Message, webEx);
+                        continue;
+                    }
+
+                    using (var stream = webEx.Response.GetResponseStream())
+                    using (var reader = new StreamReader(stream))
+                    {
+                        answer = Regex.Unescape(await reader.ReadToEndAsync());
+
+                        answer = answer.Replace("{", "").Replace("}", "");
+
+                        answer = Regex.Replace(answer, "<[^>]+>", string.Empty).Replace("\\", "").Trim();
+                    }
+
+                    lastWebException = webEx;
+                }
             }
-            catch (WebException webEx)
+            while (repeatCount < _repeatRequestCountWithError);
+
+            if (lastWebException != null)
             {
-                if (webEx.Response == null)
-                {
-                    throw new NotImplementedWebAPIException(webEx.Message, webEx.Message, webEx);
-                }
-
-                using (var stream = webEx.Response.GetResponseStream())
-                using (var reader = new StreamReader(stream))
-                {
-                    answer = Regex.Unescape(await reader.ReadToEndAsync());
-
-                    answer = answer.Replace("{", "").Replace("}", "");
-
-                    answer = Regex.Replace(answer, "<[^>]+>", string.Empty).Replace("\\", "").Trim();
-                }
-
-                CreateException(answer, webEx, webEx.Response);
-
-                return null;
+                CreateException(answer, lastWebException, lastWebException.Response);
             }
+
+            return null;
         }
         private string DecodeCharacters(string text)
         {

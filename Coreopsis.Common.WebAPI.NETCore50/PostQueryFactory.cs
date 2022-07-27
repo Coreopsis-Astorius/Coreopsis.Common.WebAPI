@@ -18,6 +18,8 @@ namespace Coreopsis.WebApi
         private TimeSpan _apiQueryTimeout;
 
         private IWebProxy _proxy;
+
+        protected int _repeatRequestCountWithError;
         public PostQueryFactory(
                 IApiData apiData,
                 string accept,
@@ -25,7 +27,8 @@ namespace Coreopsis.WebApi
                 string userAgent,
                 TimeSpan connectionTimeout,
                 TimeSpan apiQueryTimeout,
-                IWebProxy proxy = null)
+                IWebProxy proxy = null,
+                int repeatRequestCountWithError = 0)
         {
             _apiData = apiData;
 
@@ -38,6 +41,7 @@ namespace Coreopsis.WebApi
             _connectionTimeout = connectionTimeout;
             _apiQueryTimeout = apiQueryTimeout;
             _proxy = proxy;
+            _repeatRequestCountWithError = repeatRequestCountWithError;
         }
 
         public IHttpQuery<T> Create()
@@ -54,7 +58,7 @@ namespace Coreopsis.WebApi
                 whc.Add(header.Key, header.Value);
             }
 
-            return new HttpPostQuery<T>(_apiData, whc, _connectionTimeout, _apiQueryTimeout, _proxy);
+            return new HttpPostQuery<T>(_apiData, whc, _connectionTimeout, _apiQueryTimeout, _proxy, _repeatRequestCountWithError);
         }
 
         public void SetHeader(HttpRequestHeader header, string value)
